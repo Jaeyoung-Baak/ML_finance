@@ -7,10 +7,10 @@ tcode = data[1,]  # first element: Transformation code
 tcode
 
 ### Transformation 
-data = data[-1,]  # Transform ¶óÀÎ Á¦°Å 
+data = data[-1,]  # deleting transform line
 data = data[-(153:154),] # delete missing(~22.08)
 
-tdata = data[-1,] # ÃÖ´ë 1Â÷Â÷ºÐ
+tdata = data[-1,] # maximum: first differnce
 head(tdata[,1:5])
 ncol(data)
 for (i in 2:ncol(data)){
@@ -21,7 +21,7 @@ for (i in 2:ncol(data)){
   
   if(tcode[i] == 2){
     tdata[,i] <- diff(data[,i])
-  } # 1Â÷ Â÷ºÐ
+  } # first difference
   
   if(tcode[i] == 4){
     tdata[,i] <- log(data[-1,i])
@@ -83,7 +83,7 @@ ridge3=lasso.rolling.window(Y,nprev=30,indice=1,lag=3,alpha=0,type="ridge")
 ridge6=lasso.rolling.window(Y,nprev=30,indice=1,lag=6,alpha=0,type="ridge")
 
 
-#target factors  ####¹®Á¦ÀÖÀ½
+#target factors  ####ë¬¸ì œìžˆìŒ
 source("main/functions/func-fact.r")
 source("main/functions/func-baggit.r")
 source("main/functions/func-tfact.r")
@@ -149,8 +149,8 @@ save.image("results_forecasts_Final.RData")
 ####################################################
 library(Boruta)
 library(MCS)
-##### one month #####
-Y1 = Y  ## Using the Whole Sample 
+##### one month ahead #####
+Y1 = Y  ## Using the whole sample 
 lag = 1 ## Practice one-month ahead
 aux = embed(Y1,4+lag)
 y=aux[,1]
@@ -197,8 +197,8 @@ selected_1 = varOrder_1[1:which.min(Errors_1)] # The Set of Optimal Number of Va
 
 
 
-##### 3 months #####
-Y3 = Y  ## Using the Whole Sample 
+##### 3 months ahead #####
+Y3 = Y  ## Using the whole sample 
 lag = 3 ## Practice one-month ahead
 aux = embed(Y3,4+lag)
 y=aux[,1]
@@ -243,8 +243,8 @@ which.min(Errors_3) # 8 variables
 selected_3 = varOrder_3[1:which.min(Errors_3)] 
 
 
-##### six months #####
-Y6 = Y  ## Using the Whole Sample 
+##### six months ahead #####
+Y6 = Y  ## Using the whole sample 
 lag = 6 ## Practice one-month ahead
 aux = embed(Y6,4+lag)
 y=aux[,1]
@@ -360,7 +360,7 @@ gwpvalue_xgb_lag6 = matrix(NA,10,1)
 #lag1_rf_selected
 for(i in 1:10){
   
-  gw = gw.test(lag1_pred[,i], lag1_pred[,11], real, tau=1, T=30, method="NeweyWest") #tau°¡ forecast horizon
+  gw = gw.test(lag1_pred[,i], lag1_pred[,11], real, tau=1, T=30, method="NeweyWest") #tauê°€ forecast horizon
   
   gwtest_rf_lag1[i,1] <- gw$statistic
   gwpvalue_rf_lag1[i,1] <- gw$p.value
@@ -369,7 +369,7 @@ for(i in 1:10){
 #lag3_rf_selected
 for(i in 1:10){
   
-  gw = gw.test(lag3_pred[,i], lag3_pred[,11], real, tau=3, T=30, method="NeweyWest") #tau°¡ forecast horizon
+  gw = gw.test(lag3_pred[,i], lag3_pred[,11], real, tau=3, T=30, method="NeweyWest") #tauê°€ forecast horizon
   
   gwtest_rf_lag3[i,1] <- gw$statistic
   gwpvalue_rf_lag3[i,1] <- gw$p.value
@@ -378,7 +378,7 @@ for(i in 1:10){
 #lag6_rf_selected
 for(i in 1:10){
   
-  gw = gw.test(lag6_pred[,i], lag6_pred[,11], real, tau=6, T=30, method="NeweyWest") #tau°¡ forecast horizon
+  gw = gw.test(lag6_pred[,i], lag6_pred[,11], real, tau=6, T=30, method="NeweyWest") #tauê°€ forecast horizon
   
   gwtest_rf_lag6[i,1] <- gw$statistic
   gwpvalue_rf_lag6[i,1] <- gw$p.value
@@ -387,7 +387,7 @@ for(i in 1:10){
 #lag1_xgb_selected
 for(i in 1:10){
   
-  gw = gw.test(lag1_pred[,i], lag1_pred[,12], real, tau=1, T=30, method="NeweyWest") #tau°¡ forecast horizon
+  gw = gw.test(lag1_pred[,i], lag1_pred[,12], real, tau=1, T=30, method="NeweyWest") #tauê°€ forecast horizon
   
   gwtest_xgb_lag1[i,1] <- gw$statistic
   gwpvalue_xgb_lag1[i,1] <- gw$p.value
@@ -396,7 +396,7 @@ for(i in 1:10){
 #lag3_xgb_selected
 for(i in 1:10){
   
-  gw = gw.test(lag3_pred[,i], lag3_pred[,12], real, tau=3, T=30, method="NeweyWest") #tau°¡ forecast horizon
+  gw = gw.test(lag3_pred[,i], lag3_pred[,12], real, tau=3, T=30, method="NeweyWest") #tauê°€ forecast horizon
   
   gwtest_xgb_lag3[i,1] <- gw$statistic
   gwpvalue_xgb_lag3[i,1] <- gw$p.value
@@ -405,7 +405,7 @@ for(i in 1:10){
 #lag6_xgb_selected
 for(i in 1:10){
   
-  gw = gw.test(lag6_pred[,i], lag6_pred[,12], real, tau=6, T=30, method="NeweyWest") #tau°¡ forecast horizon
+  gw = gw.test(lag6_pred[,i], lag6_pred[,12], real, tau=6, T=30, method="NeweyWest") #tauê°€ forecast horizon
   
   gwtest_xgb_lag6[i,1] <- gw$statistic
   gwpvalue_xgb_lag6[i,1] <- gw$p.value
@@ -430,7 +430,9 @@ write.csv(gwpvalue_rf, 'gwpvalue_rf.csv')
 write.csv(gwtest_xgb, 'gwtest_xgb.csv')
 write.csv(gwpvalue_xgb, 'gwpvalue_xgb.csv')
 
-# gwtest.R ÆÄÀÏ ÂüÁ¶. ±Í¹«°¡¼³Àº µÎ ¸ðÇüÀÇ ¿¹Ãø·ÂÀÌ µ¿ÀÏÇÏ´Ù´Â °ÍÀÓ. µû¶ó¼­ p-value°¡ 0.05º¸´Ù ÀÛÀ¸¸é, forecast loss°¡ ÀÛÀº ¸ðÇüÀÇ ¿¹Ãø·ÂÀÌ Åë°èÀûÀ¸·Î À¯ÀÇÇÏ°Ô ¿ì¿ùÇÔÀ» ÀÇ¹ÌÇÔ. 
+# GW test
+# The null hypothesis states that the predictive accuracy of the two models is equal. 
+# Therefore, if the p-value is less than 0.05, it indicates that the model with lower forecast loss has statistically significantly better predictive performance.
 #========================================================================
 #Model Confidence Set (MCS) Test
 #========================================================================
