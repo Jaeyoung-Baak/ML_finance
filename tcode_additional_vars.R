@@ -74,11 +74,11 @@ for (i in 2:ncol(data)){
   
   if(tcode[i] == 2){
     tdata[,i] <- diff(data[-1,i])
-  } # 1차 차분
+  } # first difference
   
   if(tcode[i] == 3){
     tdata[,i] <- diff(diff(data[,i]))
-  } # tcode ==3(2차 차분)에 해당하는 데이터는 없음
+  } # tcode ==3 (second difference)
   
   if(tcode[i] == 4){
     tdata[,i] <- log(data[-(1:2),i])
@@ -90,9 +90,9 @@ for (i in 2:ncol(data)){
   
   if(tcode[i] == 6){
     tdata[,i] <- diff(diff(log(data[,i])))
-  } # log취한 뒤 2차 차분
+  } # Take the log, then apply the second difference
   
   if(tcode[i] == 7){
     tdata[,i] <- diff(data[-1,i]/data[1:(nrow(data)-1),i])
-  } # 증가율의 1차 차분
+  } # the first difference of the growth rate
 }
